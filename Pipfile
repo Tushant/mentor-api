@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+django-environ = "*"
+djangorestframework = "*"
+djoser = "*"
+graphene-django = "*"
+django-cors-headers = "*"
+pillow = "*"
+djangorestframework-jwt = "*"
+django-graphql-social-auth = "*"
+django-money = "*"
+django-mptt = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"
