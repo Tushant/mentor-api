@@ -1,6 +1,7 @@
 import graphene
 import graphql_social_auth
 
+from apps.accounts.schema import ProfileQuery
 from apps.accounts.mutations import (
     Activate,
     DeleteAccount,
@@ -9,12 +10,18 @@ from apps.accounts.mutations import (
     Register,
     ResetPassword,
     ResetPasswordConfirm,
+    ProfileMutation,
+    ExperienceMutation,
+    SkillMutation,
+    LanguageMutation,
+    EducationMutation,
+    AchievementMutation
 )
 
 from apps.accounts.schema import Viewer
 
 
-class RootQuery(graphene.ObjectType):
+class RootQuery(ProfileQuery, graphene.ObjectType):
     viewer = graphene.Field(Viewer)
 
     def resolve_viewer(self, info, **kwargs):
@@ -32,6 +39,12 @@ class Mutation(graphene.ObjectType):
     resetPassword = ResetPassword.Field()
     resetPasswordConfirm = ResetPasswordConfirm.Field()
     social_auth = graphql_social_auth.SocialAuth.Field()
+    profile = ProfileMutation.Field()
+    experience = ExperienceMutation.Field()
+    skill = SkillMutation.Field()
+    language = LanguageMutation.Field()
+    education = EducationMutation.Field()
+    achievement = AchievementMutation.Field()
 
 
 schema = graphene.Schema(query=RootQuery, mutation=Mutation)

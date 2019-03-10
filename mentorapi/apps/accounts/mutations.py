@@ -10,8 +10,11 @@ from rest_framework_jwt.serializers import (
     RefreshJSONWebTokenSerializer
 )
 
-from .models import User as UserModel
-from .schema import User
+from .models import (User as UserModel, Profile, Experience,
+                     Skill, Language, Education, Achievement)
+from .schema import (User, ProfileNode)
+from .input import (ProfileInput, ExperienceInput, SkillInput,
+                    LanguageInput, EducationInput, AchievementInput)
 from .serializers import PasswordResetConfirmRetypeSerializer
 from .utils import send_activation_email, send_password_reset_email
 
@@ -208,7 +211,148 @@ class DeleteAccount(graphene.Mutation):
             return DeleteAccount(success=True)
         return DeleteAccount(success=False, errors=errors)
 
-
 # class SocialLogin(graphene.Mutation):
 #     """ Mutation to login through social app """
 #     social_auth = graphql_social_auth.SocialAuth.Field()
+
+#  PROFILE RELATED
+
+
+class ProfileMutation(graphene.Mutation):
+    class Arguments:
+        input = ProfileInput(description="These fields are required", required=True)
+
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
+    profile = graphene.Field(ProfileNode)
+
+    @staticmethod
+    def mutate(self, info, **args):
+        print ('info', args, info.context.user, info.context.FILES, info.context.FILES.get('avatar', None))
+        is_authenticated = info.context.user.is_authenticated
+        if not is_authenticated:
+            errors = ['unauthenticated']
+            return ProfileMutation(success=False, errors=errors)
+        else:
+            profile = Profile.objects.get(user=UserModel.objects.get(id=info.context.user))
+            profile.full_name = args.get('input').get('full_name', None)
+            profile.age = args.get('input').get('age', None)
+            profile.city = args.get('input').get('city', None)
+            profile.address = args.get('input').get('address', None)
+            profile.name_of_company = args.get('input').get('name_of_company', None)
+            profile.job_title = args.get('input').get('job_title', None)
+            profile.zip_code = args.get('input').get('zip_code', None)
+            profile.slogan = args.get('input').get('slogan', None)
+            profile.bio = args.get('input').get('bio', None)
+            profile.website = args.get('input').get('website', None)
+            profile.github = args.get('input').get('github', None)
+            profile.linkedin = args.get('input').get('linkedin', None)
+            profile.twitter = args.get('input').get('twitter', None)
+            profile.facebook = args.get('input').get('facebook', None)
+            profile.save()
+            return ProfileMutation(profile=profile, success=True, errors=None)
+
+
+class ExperienceMutation(graphene.Mutation):
+    class Arguments:
+        input = ExperienceInput()
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
+
+    @staticmethod
+    def mutate(self, info, **args):
+        is_authenticated = info.context.user.is_authenticated
+        if not is_authenticated:
+            errors = ["unauthenticated"]
+            return ExperienceMutation(success=False, errors=errors)
+        else:
+            experience = Profile.objects.get(user=UserModel.objects.get(id=info.context.user))
+            experience.title = args.get('input').get('title', None)
+            experience.name_of_company = args.get('input').get('name_of_company', None)
+            experience.location = args.get('input').get('location', None)
+            experience.start_date = args.get('input').get('start_date', None)
+            experience.end_date = args.get('input').get('end_date', None)
+            experience.save()
+            return ExperienceMutation(experience=experience, success=True, errors=None)
+
+
+class SkillMutation(graphene.Mutation):
+    class Arguments:
+        input = SkillInput()
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
+
+    @staticmethod
+    def mutate(self, info, **args):
+        is_authenticated = info.context.user.is_authenticated
+        if not is_authenticated:
+            errors = ["unauthenticated"]
+            return SkillMutation(success=False, errors=errors)
+        else:
+            skill = Profile.objects.get(user=UserModel.objects.get(id=info.context.user))
+            skill.title = args.get('input').get('title', None)
+            skill.save()
+            return SkillMutation(skill=skill, success=True, errors=None)
+
+
+class LanguageMutation(graphene.Mutation):
+    class Arguments:
+        input = LanguageInput()
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
+
+    @staticmethod
+    def mutate(self, info, **args):
+        is_authenticated = info.context.user.is_authenticated
+        if not is_authenticated:
+            errors = ["unauthenticated"]
+            return LanguageMutation(success=False, errors=errors)
+        else:
+            language = Profile.objects.get(user=UserModel.objects.get(id=info.context.user))
+            language.name = args.get('input').get('name', None)
+            language.save()
+            return LanguageMutation(language=language, success=True, errors=None)
+
+
+class EducationMutation(graphene.Mutation):
+    class Arguments:
+        input = EducationInput()
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
+
+    @staticmethod
+    def mutate(self, info, **args):
+        is_authenticated = info.context.user.is_authenticated
+        if not is_authenticated:
+            errors = ["unauthenticated"]
+            return EducationMutation(success=False, errors=errors)
+        else:
+            education = Profile.objects.get(user=UserModel.objects.get(id=info.context.user))
+            education.title = args.get('input').get('title', None)
+            education.sub_title = args.get('input').get('sub_title', None)
+            education.start_date = args.get('input').get('start_date', None)
+            education.end_date = args.get('input').get('end_date', None)
+            education.save()
+            return EducationMutation(education=education, success=True, errors=None)
+
+
+class AchievementMutation(graphene.Mutation):
+    class Arguments:
+        input = AchievementInput()
+    success = graphene.Boolean()
+    errors = graphene.List(graphene.String)
+
+    @staticmethod
+    def mutate(self, info, **args):
+        is_authenticated = info.context.user.is_authenticated
+        if not is_authenticated:
+            errors = ["unauthenticated"]
+            return AchievementMutation(success=False, errors=errors)
+        else:
+            achievement = Profile.objects.get(user=UserModel.objects.get(id=info.context.user))
+            achievement.category = args.get('input').get('category', None)
+            achievement.title = args.get('input').get('title', None)
+            achievement.sub_title = args.get('input').get('sub_title', None)
+            achievement.description = args.get('input').get('description', None)
+            achievement.save()
+            return AchievementMutation(achievement=achievement, success=True, errors=None)
