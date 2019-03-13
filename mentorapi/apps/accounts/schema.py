@@ -74,7 +74,6 @@ class UserQuery(object):
 class ProfileQuery(ObjectType):
     profile = Field(ProfileNode)
     profiles = DjangoConnectionField(ProfileNode)
-
     experience = Field(ExperienceNode)
     experiences = DjangoConnectionField(ExperienceNode)
     skill = Field(SkillNode)

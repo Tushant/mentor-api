@@ -10,12 +10,18 @@ from apps.accounts.mutations import (
     Register,
     ResetPassword,
     ResetPasswordConfirm,
-    ProfileMutation,
-    ExperienceMutation,
-    SkillMutation,
-    LanguageMutation,
-    EducationMutation,
-    AchievementMutation
+    CreateProfile,
+    UpdateProfile,
+    CreateExperience,
+    UpdateExperience,
+    CreateSkill,
+    UpdateSkill,
+    CreateLanguage,
+    UpdateLanguage,
+    CreateEducation,
+    UpdateEducation,
+    CreateAchievement,
+    UpdateAchievement
 )
 
 from apps.accounts.schema import Viewer
@@ -39,12 +45,18 @@ class Mutation(graphene.ObjectType):
     resetPassword = ResetPassword.Field()
     resetPasswordConfirm = ResetPasswordConfirm.Field()
     social_auth = graphql_social_auth.SocialAuth.Field()
-    profile = ProfileMutation.Field()
-    experience = ExperienceMutation.Field()
-    skill = SkillMutation.Field()
-    language = LanguageMutation.Field()
-    education = EducationMutation.Field()
-    achievement = AchievementMutation.Field()
+    profile = CreateProfile.Field()
+    updateProfile = UpdateProfile.Field()
+    experience = CreateExperience.Field()
+    updateExperience = UpdateExperience.Field()
+    skill = CreateSkill.Field()
+    updateSkill = UpdateSkill.Field()
+    language = CreateLanguage.Field()
+    updateLanguage = UpdateLanguage.Field()
+    education = CreateEducation.Field()
+    updateEducation = UpdateEducation.Field()
+    achievement = CreateAchievement.Field()
+    updateAchievement = UpdateAchievement.Field()
 
 
 schema = graphene.Schema(query=RootQuery, mutation=Mutation)

@@ -2,6 +2,8 @@
 # level of seller and buyer
 # ratings, bids, messages, job
 from django.db import models
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
@@ -39,7 +41,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
     USER_TYPE_CHOICES = (
       (1, 'tyalent'),
-      (2, 'hirer'),  # may be the name IMP justifies the name
+      (2, 'trustee'),  # may be the name IMP justifies the name
       (3, 'company'),
       )
     role = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=1)
@@ -145,7 +147,7 @@ class Education(models.Model):
 
 
 class Achievement(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="achievement_profile")
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="achievement")
     category = models.CharField(max_length=150, blank=True, null=True)
     title = models.CharField(max_length=250, blank=False, null=False)
     sub_title = models.CharField(max_length=150, blank=True, null=True)
@@ -158,4 +160,15 @@ class Achievement(models.Model):
         verbose_name_plural = "Achievements"
 
     def __str__(self):
-        return self.title
+        return f"{self.category} - {self.title}"
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
