@@ -3,6 +3,7 @@ from djoser.email import ActivationEmail, PasswordResetEmail
 
 
 def send_activation_email(user, request):
+    print("######## send_activation_email user ##############", user)
     to = [get_user_email(user)]
     ActivationEmail(request, {'user': user}).send(to)
 

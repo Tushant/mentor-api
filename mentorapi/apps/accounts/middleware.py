@@ -24,7 +24,6 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):
                 user = request.user
             else:
                 user = self.get_user_from_auth_header(request)
-                print('user from auth header', user)
                 if user is not None:
                     request.user = user
 
@@ -39,22 +38,16 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):
 
     def mark_whodid(self, user, sender, instance, **kwargs):
         # user logging here
-        print ('user', user)
+        print ('user mark_whodid', user)
 
     def get_user_from_auth_header(self, request):
         try:
-            print("auth")
             auth_keyword, token = get_authorization_header(request).split()
-            print("auth auth_keyword", auth_keyword, token)
             jwt_header, claims, signature = token.decode().split('.')
-            print("jwt header", jwt_header, claims, signature)
             try:
                 payload = api_settings.JWT_DECODE_HANDLER(token)
-                print('payload', payload)
                 try:
-                    print("api_settings", api_settings)
                     user_id = api_settings.JWT_PAYLOAD_GET_USER_ID_HANDLER(payload)
-                    print('user_id', user_id)
                     if user_id:
                         user = User.objects.get(pk=user_id, is_active=True)
                         return user
@@ -66,13 +59,10 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):
                     return None
 
             except jwt.ExpiredSignature:
-                print("signature expired")
                 msg = 'Signature has expired.'
                 return None
             except jwt.DecodeError:
-                print("Decode Error")
                 msg = 'Error decoding signature.'
                 return None
         except ValueError:
-            print("Value Error")
             return None

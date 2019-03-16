@@ -33,22 +33,29 @@ class Register(graphene.Mutation):
 
     success = graphene.Boolean()
     errors = graphene.List(graphene.String)
+    email = graphene.String()
 
     def mutate(self, info, email, password, password_repeat, role):
         if password == password_repeat:
             try:
+                print("usermodel", email, password, password_repeat, role)
                 user = UserModel.objects.create(
                     email=email,
                     role=role,
                     is_active=False
                 )
+                print("&&&&&&&&&&&&&")
+                print("usermodel not created", user)
                 user.set_password(password)
                 user.save()
+                print("djoser setting check", djoser_settings.get('SEND_ACTIVATION_EMAIL'))
                 if djoser_settings.get('SEND_ACTIVATION_EMAIL'):
+                    print("info context send activation", user, info.context)
                     send_activation_email(user, info.context)
-                return Register(success=bool(user.id))
+                return Register(success=bool(user.id), email=user.email)
             # TODO: specify exception
-            except Exception:
+            except Exception as e:
+                print ('exception', e)
                 errors = ["email", "Email already registered."]
                 return Register(success=False, errors=errors)
         errors = ["password", "Passwords don't match."]

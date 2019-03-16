@@ -40,11 +40,11 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     USER_TYPE_CHOICES = (
-      (1, 'tyalent'),
-      (2, 'trustee'),  # may be the name IMP justifies the name
-      (3, 'company'),
+      ('tyalent', 'tyalent'),
+      ('trustee', 'trustee'),  # may be the name IMP justifies the name
+      ('company', 'company'),
       )
-    role = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=1)
+    role = models.CharField(choices=USER_TYPE_CHOICES, max_length=20, default='tyalent')
     objects = UserManager()
 
     def __str__(self):
@@ -57,7 +57,7 @@ User._meta.get_field('username')._unique = False
 
 # may be use slug later
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     full_name = models.CharField(max_length=100, blank=True, null=True)
     age = models.PositiveSmallIntegerField(blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
@@ -165,10 +165,12 @@ class Achievement(models.Model):
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
+    print ("sender", sender, instance, created, kwargs)
     if created:
         Profile.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
+    print("instance", instance)
     instance.profile.save()
