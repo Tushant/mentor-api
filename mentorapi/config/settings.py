@@ -84,12 +84,14 @@ DJANGO_APPS = [
 # Project definition
 LOCAL_APPS = [
     'apps.accounts',
+    'apps.chats',
     'apps.projects',
     'apps.services',
 ]
 
 # THIRD_PARTY_APPS
 THIRD_PARTY_APPS = [
+    'channels',
     'djmoney',
     'djoser',
     'graphene_django',
@@ -118,7 +120,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR, '/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,7 +134,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = "config.routing.application"
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)]
+        }
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -285,3 +296,13 @@ SOCIAL_AUTH_PIPELINE = [
 #
 SOCIAL_AUTH_FACEBOOK_KEY = env('SOCIAL_AUTH_FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = env('SOCIAL_AUTH_FACEBOOK_SECRET')
+
+# MAILGUN SETUP
+MAILGUN_ACCESS_KEY = env('MAILGUN_ACCESS_KEY')
+MAILGUN_SERVER_NAME = env('MAILGUN_SERVER_NAME')
+
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'postmaster@sandbox97d74435b0fa46b4b285c41fccfa0e6b.mailgun.org'
+EMAIL_HOST_PASSWORD = env('MAILGUN_EMAIL_PASSWORD')
+EMAIL_USE_TLS = True

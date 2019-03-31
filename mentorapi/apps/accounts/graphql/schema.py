@@ -6,7 +6,14 @@ from graphene_django.filter.fields import DjangoFilterConnectionField
 from asgiref.sync import async_to_sync
 from django.core import serializers
 
-from . import models
+from .models import (User as UserModel,
+                     Profile,
+                     Experience,
+                     Skill,
+                     Language,
+                     Education,
+                     Achievement
+                     )
 
 
 class User(DjangoObjectType):
@@ -14,7 +21,7 @@ class User(DjangoObjectType):
     User Node
     """
     class Meta:
-        model = models.User
+        model = UserModel
         filter_fields = {
             'email': ['exact', ]
         }
@@ -24,61 +31,37 @@ class User(DjangoObjectType):
 
 class ProfileNode(DjangoObjectType):
     class Meta:
-        model = models.Profile
+        model = Profile
         interfaces = (relay.Node, )
 
 
 class ExperienceNode(DjangoObjectType):
     class Meta:
-        model = models.Experience
+        model = Experience
         interfaces = (relay.Node, )
 
 
 class SkillNode(DjangoObjectType):
     class Meta:
-        model = models.Skill
+        model = Skill
         interfaces = (relay.Node, )
 
 
 class LanguageNode(DjangoObjectType):
     class Meta:
-        model = models.Language
+        model = Language
         interfaces = (relay.Node, )
 
 
 class EducationNode(DjangoObjectType):
     class Meta:
-        model = models.Education
+        model = Education
         interfaces = (relay.Node, )
 
 
 class AchievementNode(DjangoObjectType):
     class Meta:
-        model = models.Achievement
-        interfaces = (relay.Node, )
-
-
-class PortfolioNode(DjangoObjectType):
-    class Meta:
-        model = models.Portfolio
-        interfaces = (relay.Node, )
-
-
-class PortfolioGalleryNode(DjangoObjectType):
-    class Meta:
-        model = models.Gallery
-        interfaces = (relay.Node, )
-
-
-class CompanyNode(DjangoObjectType):
-    class Meta:
-        model = models.Company
-        interfaces = (relay.Node, )
-
-
-class CompanyServiceNode(DjangoObjectType):
-    class Meta:
-        model = models.Service
+        model = Achievement
         interfaces = (relay.Node, )
 
 
@@ -104,14 +87,6 @@ class ProfileQuery(ObjectType):
     educations = DjangoConnectionField(EducationNode)
     achievement = Field(AchievementNode)
     achievements = DjangoConnectionField(AchievementNode)
-    company = Field(CompanyNode)
-    companies = DjangoConnectionField(CompanyNode)
-    service = Field(CompanyServiceNode)
-    services = DjangoConnectionField(CompanyServiceNode)
-    portfolio = Field(PortfolioNode)
-    portfolios = DjangoConnectionField(PortfolioNode)
-    gallery = Field(PortfolioGalleryNode)
-    galleries = DjangoConnectionField(PortfolioGalleryNode)
 
     @staticmethod
     def resolve_profile(self, info, **kwargs):
@@ -123,7 +98,7 @@ class ProfileQuery(ObjectType):
             })
             print("percent")
             print("is", percent)
-            return models.Profile.objects.get(user=info.context.user)
+            return Profile.objects.get(user=info.context.user)
         return None
 
 

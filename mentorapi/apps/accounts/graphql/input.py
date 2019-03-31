@@ -1,5 +1,4 @@
 import graphene
-from core.file_upload import types
 
 
 class ProfileInput(graphene.InputObjectType):
@@ -62,7 +61,7 @@ class PortfolioInput(graphene.InputObjectType):
     sub_title = graphene.String(description='Sub Title')
     description = graphene.String(description='Description')
     url = graphene.String(description='URL')
-    image = types.Upload(description='Upload image')
+    # image = graphene.String(description='URL')
 
 
 class PortfolioGalleryInput(graphene.InputObjectType):
@@ -70,7 +69,7 @@ class PortfolioGalleryInput(graphene.InputObjectType):
     title = graphene.String(description='Title')
     description = graphene.String(description='Description')
     url = graphene.String(description='URL')
-    image = types.Upload(description='Upload image')
+    # image = graphene.String(description='URL')
 
 
 class CompanyInput(graphene.InputObjectType):
@@ -93,4 +92,3 @@ class CompanyServicesInput(graphene.InputObjectType):
     title = graphene.String(description='Title')
     sub_title = graphene.String(description='Sub Title')
     description = graphene.String(description='Description')
-    image = types.Upload(description='Upload image')

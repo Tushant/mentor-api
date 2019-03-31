@@ -1,10 +1,12 @@
 import json
-
+import logging
 from django.conf import settings
 from graphene_django.views import GraphQLView
 
 # This class is modified verion of the `ModifiedGraphQLView` class from
 # `graphene-file-upload` (https://github.com/lmcgartland/graphene-file-upload).
+
+logger = logging.getLogger('file_upload')
 
 
 class FileUploadGraphQLView(GraphQLView):
@@ -79,7 +81,7 @@ def obj_set(obj, path, value, doNotReplace):
         return obj
     if isinstance(path, str):
         newPath = list(map(getKey, path.split('.')))
-        return obj_set(obj, newPath, value, doNotReplace )
+        return obj_set(obj, newPath, value, doNotReplace)
 
     currentPath = path[0]
     currentValue = getShallowProperty(obj, currentPath)
@@ -95,6 +97,7 @@ def obj_set(obj, path, value, doNotReplace):
             else:
                 obj[currentPath] = {}
         except Exception as e:
+            logger.error(e)
             pass
 
     return obj_set(obj[currentPath], path[1:], value, doNotReplace)

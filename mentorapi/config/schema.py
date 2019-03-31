@@ -21,7 +21,15 @@ from apps.accounts.mutations import (
     CreateEducation,
     UpdateEducation,
     CreateAchievement,
-    UpdateAchievement
+    UpdateAchievement,
+    CreatePortfolio,
+    UpdatePortfolio,
+    CreatePortfolioGallery,
+    UpdatePortfolioGallery,
+    CreateCompany,
+    UpdateCompany,
+    CreateCompanyService,
+    UpdateCompanyService,
 )
 
 from apps.accounts.schema import Viewer
@@ -57,6 +65,14 @@ class Mutation(graphene.ObjectType):
     updateEducation = UpdateEducation.Field()
     achievement = CreateAchievement.Field()
     updateAchievement = UpdateAchievement.Field()
+    portfolio = CreatePortfolio.Field()
+    updatePortfolio = UpdatePortfolio.Field()
+    portfolioGallery = CreatePortfolioGallery.Field()
+    updatePortfolioGallery = UpdatePortfolioGallery.Field()
+    company = CreateCompany.Field()
+    updateCompany = UpdateCompany.Field()
+    companyService = CreateCompanyService.Field()
+    updateCompanyService = UpdateCompanyService.Field()
 
 
 schema = graphene.Schema(query=RootQuery, mutation=Mutation)
