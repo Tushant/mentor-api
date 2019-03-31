@@ -15,6 +15,10 @@ djangorestframework-jwt = "*"
 django-graphql-social-auth = "*"
 django-money = "*"
 django-mptt = "*"
+channels = "*"
+weasyprint = "*"
+"xhtml2pdf" = "*"
+channels-redis = "*"
 
 [dev-packages]
 
