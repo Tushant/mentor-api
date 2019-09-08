@@ -9,6 +9,12 @@ import environ
 ROOT_DIR = BASE_DIR = os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))))
 print(ROOT_DIR)
+STATIC_ROOT = os.path.join(ROOT_DIR, 'staticfiles/')
+print(STATIC_ROOT)
+STATIC_URL = "/static/"
+STATICFILES_DIRS = (
+    os.path.join(ROOT_DIR, 'static'),
+)
 # APPS_DIR = ROOT_DIR.path("apps")
 
 env = environ.Env()
@@ -171,12 +177,7 @@ GRAPHENE = {
     ],
 }
 
-STATIC_ROOT = os.path.join(ROOT_DIR, 'staticfiles')
-print(STATIC_ROOT)
-STATIC_URL = "/static/"
-STATICFILES_DIRS = (
-    os.path.join(ROOT_DIR, 'static'),
-)
+
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
