@@ -26,6 +26,7 @@ gunicorn = "*"
 django-storages = "*"
 "boto3" = "*"
 "psycopg2-binary" = "*"
+django-graphql-jwt = "*"
 
 [dev-packages]
 
