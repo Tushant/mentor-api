@@ -6,6 +6,8 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
+from core.utils import create_slug
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **kwars):
@@ -40,11 +42,12 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     USER_TYPE_CHOICES = (
-      ('tyalent', 'tyalent'),
-      ('trustee', 'trustee'),  # may be the name IMP justifies the name
-      ('company', 'company'),
-      )
-    role = models.CharField(choices=USER_TYPE_CHOICES, max_length=20, default='tyalent')
+        ('tyalent', 'tyalent'),
+        ('trustee', 'trustee'),  # may be the name IMP justifies the name
+        ('company', 'company'),
+    )
+    role = models.CharField(choices=USER_TYPE_CHOICES,
+                            max_length=20, default='tyalent')
     objects = UserManager()
 
     def __str__(self):
@@ -57,11 +60,13 @@ User._meta.get_field('username')._unique = False
 
 # may be use slug later
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="profile")
     full_name = models.CharField(max_length=100, blank=True, null=True)
     age = models.PositiveSmallIntegerField(blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
+    phone_number = models.CharField(max_length=10, blank=True, null=True)
     name_of_company = models.CharField(max_length=150, blank=True, null=True)
     job_title = models.CharField(max_length=100, blank=True, null=True)
     zip_code = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -80,11 +85,12 @@ class Profile(models.Model):
         verbose_name_plural = "Profiles"
 
     def __str__(self):
-        return f"{self.user.email}"
+        return f"{self.user.__str__()}"
 
 
 class Experience(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="experience")
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="experience")
     title = models.CharField(max_length=150, blank=False, null=False)
     name_of_company = models.CharField(max_length=150, blank=False, null=False)
     location = models.CharField(max_length=150, blank=False, null=False)
@@ -102,7 +108,8 @@ class Experience(models.Model):
 
 
 class Skill(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="skill")
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="skill")
     title = models.CharField(max_length=150, blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -116,7 +123,8 @@ class Skill(models.Model):
 
 
 class Language(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="language")
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="language")
     name = models.CharField(max_length=150, blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -130,7 +138,8 @@ class Language(models.Model):
 
 
 class Education(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="education")
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="education")
     title = models.CharField(max_length=150, blank=False, null=False)
     sub_title = models.CharField(max_length=150, blank=True, null=True)
     start_date = models.DateField(max_length=150, blank=False, null=False)
@@ -147,7 +156,8 @@ class Education(models.Model):
 
 
 class Achievement(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="achievement")
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="achievement")
     category = models.CharField(max_length=150, blank=True, null=True)
     title = models.CharField(max_length=250, blank=False, null=False)
     sub_title = models.CharField(max_length=150, blank=True, null=True)
@@ -164,7 +174,8 @@ class Achievement(models.Model):
 
 
 class Portfolio(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="portfolio")
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="portfolio")
     category = models.CharField(max_length=150, blank=True, null=True)
     title = models.CharField(max_length=250, blank=False, null=False)
     sub_title = models.CharField(max_length=150, blank=True, null=True)
@@ -183,10 +194,12 @@ class Portfolio(models.Model):
 
 
 class Gallery(models.Model):
-    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name="gallery")
+    portfolio = models.ForeignKey(
+        Portfolio, on_delete=models.CASCADE, related_name="gallery")
     title = models.CharField(max_length=250, blank=False, null=False)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='portfolio/gallery/', blank=True, null=True)
+    image = models.ImageField(
+        upload_to='portfolio/gallery/', blank=True, null=True)
     url = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -196,17 +209,59 @@ class Gallery(models.Model):
         verbose_name_plural = "Galleries"
 
     def __str__(self):
-        return f"{self.portfolio.title} - {self.title}"
+        return f"{self.portfolio.__str__()} - {self.title}"
+
+
+class Industry(models.Model):
+
+    name = models.CharField(max_length=150, blank=True, null=True)
+    slug = models.SlugField()
+
+    class Meta:
+
+        verbose_name = 'Industry'
+        verbose_name_plural = 'Industries'
+
+    def __str__(self):
+        return self.name
+
+    def save(self, **kwargs):
+        slug = self.name
+        create_slug(self, slug)
+        super(Industry, self).save()
+
+
+class Segment(models.Model):
+
+    industry = models.ForeignKey(
+        Industry, related_name='segment', on_delete=models.CASCADE)
+    name = models.CharField(max_length=150, blank=True, null=True)
+    slug = models.SlugField()
+
+    class Meta:
+
+        verbose_name = 'Segment'
+        verbose_name_plural = 'Segments'
+
+    def __str__(self):
+        return f'{self.industry.name} - {self.name}'
+
+    def save(self, **kwargs):
+        slug = self.name
+        create_slug(self, slug)
+        super(Segment, self).save()
 
 
 class Company(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="company")
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="company")
     name_of_company = models.CharField(max_length=200, blank=False, null=False)
     pan_number = models.CharField(max_length=100, blank=False, null=False)
     phone = models.CharField(max_length=20, blank=False, null=False)
     mobile = models.CharField(max_length=20, blank=False, null=False)
     email = models.EmailField(max_length=20, blank=False, null=False)
-    number_of_employees = models.PositiveSmallIntegerField(blank=False, null=False, default=1)
+    number_of_employees = models.PositiveSmallIntegerField(
+        blank=False, null=False, default=1)
     # address
     city = models.CharField(max_length=100, blank=False, null=False)
     address = models.CharField(max_length=100, blank=True, null=True)
@@ -223,15 +278,17 @@ class Company(models.Model):
         verbose_name_plural = "Companies"
 
     def __str__(self):
-        return f"{self.company.name_of_company}"
+        return f"{self.name_of_company}"
 
 
 class Service(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="services")
+    company = models.ForeignKey(
+        Company, on_delete=models.CASCADE, related_name="services")
     title = models.CharField(max_length=250, blank=False, null=False)
     sub_title = models.CharField(max_length=150, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='company/services/', blank=True, null=True)
+    image = models.ImageField(
+        upload_to='company/services/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -240,7 +297,7 @@ class Service(models.Model):
         verbose_name_plural = "Services"
 
     def __str__(self):
-        return f"{self.company.name_of_company} - {self.title}"
+        return f"{self.company.__str__()} - {self.title}"
 
 # @receiver(post_save, sender=User)
 # def create_user_profile(sender, instance, created, **kwargs):

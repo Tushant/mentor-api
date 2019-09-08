@@ -17,8 +17,13 @@ django-money = "*"
 django-mptt = "*"
 channels = "*"
 weasyprint = "*"
-"xhtml2pdf" = "*"
 channels-redis = "*"
+unipath = "*"
+whitenoise = "*"
+django-debug-toolbar = "*"
+django-extensions = "*"
+gunicorn = "*"
+django-storages = "*"
 
 [dev-packages]
 
