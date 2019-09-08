@@ -12,9 +12,9 @@ print(ROOT_DIR)
 STATIC_ROOT = os.path.join(ROOT_DIR, 'staticfiles/')
 print(STATIC_ROOT)
 STATIC_URL = "/static/"
-STATICFILES_DIRS = (
-    os.path.join(ROOT_DIR, 'static'),
-)
+# STATICFILES_DIRS = (
+#     os.path.join(ROOT_DIR, 'static'),
+# )
 # APPS_DIR = ROOT_DIR.path("apps")
 
 env = environ.Env()
