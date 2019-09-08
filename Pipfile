@@ -24,6 +24,7 @@ django-debug-toolbar = "*"
 django-extensions = "*"
 gunicorn = "*"
 django-storages = "*"
+"boto3" = "*"
 
 [dev-packages]
 
