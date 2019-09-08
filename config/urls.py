@@ -11,5 +11,5 @@ from apps.accounts.views import pdf_generation
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', pdf_generation),
-    path('graphql', csrf_exempt(FileUploadGraphQLView.as_view(graphiql=settings.DEBUG))),
+    path('graphql', csrf_exempt(FileUploadGraphQLView.as_view(graphiql=True))),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
