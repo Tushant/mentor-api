@@ -25,6 +25,7 @@ django-extensions = "*"
 gunicorn = "*"
 django-storages = "*"
 "boto3" = "*"
+"psycopg2-binary" = "*"
 
 [dev-packages]
 
