@@ -2,7 +2,8 @@ from .base import *  # noqa
 from .base import env
 
 SECRET_KEY = env("DJANGO_SECRET_KEY")
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["mentor.com"])
+# ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["mentor.com"])
+ALLOWED_HOSTS = ['serene-beach-03946.herokuapp.com/']
 
 DATABASES["default"] = env.db("DATABASE_URL")  # noqa F405
 DATABASES["default"]["ATOMIC_REQUESTS"] = True  # noqa F405
