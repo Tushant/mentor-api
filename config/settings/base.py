@@ -5,11 +5,10 @@ import os
 import datetime
 import environ
 
-ROOT_DIR = (
-    environ.Path(__file__) - 3
-)  # (mentor-api/config/settings/base.py - 3 = mentor-api/)
+# (mentor-api/config/settings/base.py - 3 = mentor-api/)
+ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 print(ROOT_DIR)
-APPS_DIR = ROOT_DIR.path("apps")
+# APPS_DIR = ROOT_DIR.path("apps")
 
 env = environ.Env()
 
@@ -172,6 +171,7 @@ GRAPHENE = {
 }
 
 STATIC_ROOT = os.path.join(ROOT_DIR, 'staticfiles')
+print(STATIC_ROOT)
 STATIC_URL = "/static/"
 STATICFILES_DIRS = (
     os.path.join(ROOT_DIR, 'static'),
@@ -181,5 +181,5 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
-MEDIA_ROOT = str(ROOT_DIR("media"))
+MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 MEDIA_URL = "/media/"
