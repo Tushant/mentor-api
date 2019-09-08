@@ -6,7 +6,8 @@ import datetime
 import environ
 
 # (mentor-api/config/settings/base.py - 3 = mentor-api/)
-ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
+ROOT_DIR = BASE_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 print(ROOT_DIR)
 # APPS_DIR = ROOT_DIR.path("apps")
 
