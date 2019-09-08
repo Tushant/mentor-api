@@ -171,9 +171,11 @@ GRAPHENE = {
     ],
 }
 
-STATIC_ROOT = str(ROOT_DIR("staticfiles"))
+STATIC_ROOT = os.path.join(ROOT_DIR, 'staticfiles')
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [str(ROOT_DIR.path("static"))]
+STATICFILES_DIRS = (
+    os.path.join(ROOT_DIR, 'static'),
+)
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
